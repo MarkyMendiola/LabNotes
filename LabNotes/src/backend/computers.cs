@@ -9,7 +9,7 @@ namespace LabPCTracker.Backend
         public int id;
         public string name;
 
-        // When this object is called, it will return the name of the lab
+        // When this object is called , it will return the name of the lab
         public override string ToString()
         {
             return name;

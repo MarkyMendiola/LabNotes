@@ -1,3 +1,9 @@
-# Build output
+# Visual Studio
+.vs/
 bin/
 obj/
+
+# Build files
+Debug/
+Release/
+
