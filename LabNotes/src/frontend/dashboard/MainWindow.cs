@@ -1,3 +1,6 @@
+using System.ComponentModel;
+using LabPCTracker.Backend;
+
 namespace Labnote
 {
     public partial class MainWindow : Form
@@ -5,6 +8,17 @@ namespace Labnote
         public MainWindow()
         {
             InitializeComponent();
+
+            // Closing the dashboard closes the whole app
+            FormClosed += (sender, e) => Application.Exit();
+
+            // Visual Studio's designer also runs this constructor, so don't touch the database there
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime) return;
+
+            label2.Text = Auth.CurrentUser.name;                // "Welcome back, <name>"
+            Frontend.ShowNextClass(label7, label6, label5);     // date, time, lab of the next class
+            Frontend.ShowBrokenLab(label8, label9);            // lab with the most broken PCs
+            Frontend.WireLogout(this);
         }
 
         private void button1_Click(object sender, EventArgs e)

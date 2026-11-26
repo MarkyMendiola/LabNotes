@@ -6,8 +6,10 @@ public static class Constants
     public const string RoleAdmin = "admin";
     public const string RoleTeacher = "teacher";
 
-    public const string StatusAvailable = "available";
-    public const string StatusBroken = "broken";
+    // These must match the words saved in the computers.status column
+    public const string StatusAvailable = "Available";
+    public const string StatusFaulty = "Faulty";
+    public const string StatusBroken = "Broken";
 
     public const string AppTitle = "Lab PC Tracker";
 }

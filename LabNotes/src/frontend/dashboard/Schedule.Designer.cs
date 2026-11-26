@@ -260,71 +260,7 @@
             label18.Size = new Size(103, 25);
             label18.TabIndex = 0;
             label18.Text = "Next Class";
-            // 
-            // panel3
-            // 
-            panel3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            panel3.BackColor = SystemColors.HotTrack;
-            panel3.Controls.Add(label10);
-            panel3.Controls.Add(label9);
-            panel3.Controls.Add(label8);
-            panel3.Controls.Add(label7);
-            panel3.Controls.Add(label6);
-            panel3.Controls.Add(label5);
-            panel3.Controls.Add(label4);
-            panel3.Location = new Point(1272, 38);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(326, 142);
-            panel3.TabIndex = 2;
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label7.ForeColor = SystemColors.ControlLightLight;
-            label7.Location = new Point(232, 10);
-            label7.Name = "label7";
-            label7.Size = new Size(85, 25);
-            label7.TabIndex = 3;
-            label7.Text = "11/19/26";
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label6.ForeColor = SystemColors.ControlLightLight;
-            label6.Location = new Point(3, 101);
-            label6.Name = "label6";
-            label6.Size = new Size(81, 25);
-            label6.TabIndex = 2;
-            label6.Text = "BSIT 2-1";
-            // 
-            // label5
-            // 
-            label5.AutoEllipsis = true;
-            label5.AutoSize = true;
-            label5.BackColor = SystemColors.HotTrack;
-            label5.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label5.ForeColor = SystemColors.ControlLightLight;
-            label5.Location = new Point(3, 71);
-            label5.Name = "label5";
-            label5.RightToLeft = RightToLeft.No;
-            label5.Size = new Size(62, 25);
-            label5.TabIndex = 1;
-            label5.Text = "CC101";
-            label5.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label4.ForeColor = SystemColors.ControlLightLight;
-            label4.Location = new Point(3, 10);
-            label4.Name = "label4";
-            label4.Size = new Size(103, 25);
-            label4.TabIndex = 0;
-            label4.Text = "Next Class";
-            // 
+            //
             // pictureBox1
             // 
             pictureBox1.BackColor = SystemColors.ControlLightLight;

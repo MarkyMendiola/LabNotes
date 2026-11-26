@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using LabPCTracker.Backend;
 
 namespace Labnote
 {
@@ -13,6 +14,37 @@ namespace Labnote
         public Schedule()
         {
             InitializeComponent();
+
+            // Visual Studio's designer also runs this constructor, so don't touch the database there
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime) return;
+
+            label2.Text = Auth.CurrentUser.name;   // "Welcome back, <name>"
+
+            // The two summary cards at the top (next class + lab with the most broken PCs)
+            Frontend.ShowNextClass(label7, label6, label5);
+            Frontend.ShowBrokenLab(label8, label9);
+            Frontend.ShowNextClass(label15, label16, label17);
+            Frontend.ShowBrokenLab(label14, label13);
+
+            LoadSchedule();
+            Frontend.WireLogout(this);
+        }
+
+        // Fills the table with every booking of the logged-in teacher
+        private void LoadSchedule()
+        {
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.Rows.Clear();
+
+            foreach (var item in Schedules.GetSchedulesForUser(Auth.CurrentUser.id))
+            {
+                string day = item.start.ToString("ddd, MMM dd");
+                string time = item.start.ToString("h:mm tt") + " - " + item.end.ToString("h:mm tt");
+
+                // Column order: Day, Subjects & Section, Time, Computer Lab
+                // ("-" because the database does not store subjects or sections yet)
+                dataGridView1.Rows.Add(day, "-", time, item.labName);
+            }
         }
 
         private void label13_Click(object sender, EventArgs e)

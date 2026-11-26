@@ -22,9 +22,9 @@ namespace LabPCTracker.Backend
         public string name;
         public int? labId;
         public string labName;
-        public string status;   // "working" or "broken"
+        public string status;   // "Available", "Faulty" or "Broken"
 
-        // When this object is called, it will return something like "LAB1-PC07 - broken"
+        // When this object is called, it will return something like "LAB1-PC07 - Broken"
         public override string ToString()
         {
             return name + " - " + status;
@@ -33,7 +33,8 @@ namespace LabPCTracker.Backend
 
     public static class Computers
     {
-        public static List<Lab> GetBookedLabs()
+        // Lists every lab (used for the lab dropdown and as the "all labs" set in Logic.Difference)
+        public static List<Lab> GetLabs()
         {
             var labs = new List<Lab>();
 
@@ -41,9 +42,9 @@ namespace LabPCTracker.Backend
             using var cmd = conn.CreateCommand();
             cmd.CommandText = @"
                 SELECT lab_id, lab_name
-                FROM Labs
-                ORDER BY name;";
-            var reader = cmd.ExecuteReader();
+                FROM labs
+                ORDER BY lab_name;";
+            using var reader = cmd.ExecuteReader();
 
             while(reader.Read())
             {
@@ -60,7 +61,7 @@ namespace LabPCTracker.Backend
 
         //To create GetStatus. A method that lists the status of every computer whether working faulty or broken         
     
-        // Lists every computer with its lab and whether it is working or broken
+        // Lists every computer with its lab and its status (Available, Faulty or Broken)
         public static List<Computer> GetStatus()
         {
             var computers = new List<Computer>();
@@ -89,7 +90,54 @@ namespace LabPCTracker.Backend
 
             return computers;
         }
+
+        // Lists the names of the software installed on one computer
+        public static List<string> GetSoftware(int computerId)
+        {
+            var software = new List<string>();
+
+            using var conn = Db.Open();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = @"
+                SELECT s.software_name
+                FROM pc_software ps
+                JOIN software s ON s.software_id = ps.software_id
+                WHERE ps.computer_id = @computerId
+                ORDER BY s.software_name;";
+            cmd.Parameters.AddWithValue("@computerId", computerId);
+            using var reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                software.Add(reader.GetString(0));
+            }
+
+            return software;
+        }
+
+        // Returns the name of the lab with the most broken PCs and sets brokenCount to that number.
+        // Returns "" (and 0) when no PC is broken.
+        public static string GetMostBrokenLab(out int brokenCount)
+        {
+            using var conn = Db.Open();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = @"
+                SELECT TOP 1 l.lab_name, COUNT(*) AS total
+                FROM computers c
+                JOIN labs l ON l.lab_id = c.lab_id
+                WHERE c.status = 'Broken'
+                GROUP BY l.lab_name
+                ORDER BY COUNT(*) DESC, l.lab_name;";
+            using var reader = cmd.ExecuteReader();
+
+            if (!reader.Read())
+            {
+                brokenCount = 0;
+                return "";
+            }
+
+            brokenCount = reader.GetInt32(1);
+            return reader.GetString(0);
+        }
     }
-
-
 }
