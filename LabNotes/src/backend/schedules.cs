@@ -21,8 +21,12 @@ namespace LabPCTracker.Backend
     {
         public int id;
         public string labName;
+        public string subject;
+        public string section;
+        public string dayOfWeek;
         public DateTime start;
         public DateTime end;
+        public bool isRecurring;
     }
 
     public static class Schedules
@@ -94,7 +98,8 @@ namespace LabPCTracker.Backend
             using var conn = Db.Open();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = @"
-                SELECT s.schedule_id, l.lab_name, s.start_time, s.end_time
+                SELECT s.lab_id, s.user_id, s.subject, s.section, 
+                s.day_of_week, s.start_time, s.end_time, s.is_recurring
                 FROM schedules s
                 JOIN labs l ON l.lab_id = s.lab_id
                 WHERE s.user_id = @userId
@@ -108,8 +113,12 @@ namespace LabPCTracker.Backend
                 {
                     id = reader.GetInt32(0),
                     labName = reader.GetString(1),
-                    start = reader.GetDateTime(2),
-                    end = reader.GetDateTime(3)
+                    subject = reader.GetString(2),
+                    section = reader.GetString(3),
+                    dayOfWeek = reader.GetString(4),
+                    start = reader.GetDateTime(5),
+                    end = reader.GetDateTime(6),
+                    isRecurring = reader.GetBoolean(7)
                 };
                 items.Add(item);
             }

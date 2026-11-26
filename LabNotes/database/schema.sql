@@ -36,8 +36,12 @@ CREATE TABLE schedules (
     schedule_id INT PRIMARY KEY IDENTITY(1,1),
     lab_id INT NOT NULL,
     user_id INT NOT NULL,
+    subject VARCHAR(50) NOT NULL,
+    section VARCHAR(10) NOT NULL,
     start_time DATETIME2 NOT NULL,
     end_time DATETIME2 NOT NULL,
+    is_recurring BIT DEFAULT 1,
+    day_of_week VARCHAR(10) NOT NULL,
     FOREIGN KEY (lab_id) REFERENCES labs(lab_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
@@ -112,10 +116,6 @@ INSERT INTO computers (pc_name, lab_id) VALUES
 ('EDTECH2-PC16', 5), ('EDTECH2-PC17', 5), ('EDTECH2-PC18', 5), ('EDTECH2-PC19', 5), ('EDTECH2-PC20', 5),
 ('EDTECH2-PC21', 5), ('EDTECH2-PC22', 5), ('EDTECH2-PC23', 5), ('EDTECH2-PC24', 5), ('EDTECH2-PC25', 5);
 
--- Status: every PC starts as Available (the column default).
--- Faulty = still works but has a problem, Broken = does not work at all.
-UPDATE computers SET status = 'Faulty' WHERE pc_name IN ('LAB1-PC01', 'LAB2-PC09', 'LAB3-PC13', 'EDTECH2-PC12');
-UPDATE computers SET status = 'Broken' WHERE pc_name IN ('EDTECH1-PC22', 'EDTECH1-PC23');
 
 -- 3. Software (IDs 1 to 16)
 INSERT INTO software (software_name) VALUES
@@ -148,24 +148,26 @@ JOIN software s ON
     (c.lab_id = 5 AND s.software_id IN (1, 2, 14, 15, 16));    -- Edtech 2
 
 -- 5. Insert Schedules FIRST (Generates schedule_id 1 to 10)
-INSERT INTO schedules (lab_id, user_id, start_time, end_time) VALUES
--- Lab 1 (lab_id = 1)
-(1, 1, '2026-11-17 08:00:00', '2026-11-17 10:00:00'),
-(1, 2, '2026-11-17 10:30:00', '2026-11-17 12:30:00'),
+INSERT INTO schedules
+(lab_id, user_id, subject, section, day_of_week,
+ start_time, end_time, is_recurring)
+VALUES
+-- Lab 1
+(1, 1, 'CC102', 'BSIT 1-1', 'Monday', '08:00', '10:00', 1),
+(1, 2, 'HCI101', 'BSIT 1-8', 'Monday', '10:30', '12:30', 1),
 
--- Lab 2 (lab_id = 2)
-(2, 2, '2026-11-17 08:00:00', '2026-11-17 11:00:00'),
-(2, 3, '2026-11-17 13:00:00', '2026-11-17 15:00:00'),
+-- Lab 2
+(2, 2, 'CC103', 'BSIT 1-12', 'Tuesday', '08:00', '11:00', 1),
+(2, 3, 'IM101', 'BSIT 2-4', 'Tuesday', '13:00', '15:00', 1),
 
--- Lab 3 (lab_id = 3)
-(3, 1, '2026-11-17 13:00:00', '2026-11-17 16:00:00'),
-(3, 3, '2026-11-18 08:00:00', '2026-11-18 10:00:00'),
+-- Lab 3
+(3, 1, 'CC104', 'BSIT 2-9', 'Wednesday', '13:00', '16:00', 1),
+(3, 3, 'CC102', 'BSIT 1-5', 'Wednesday', '08:00', '10:00', 1),
 
--- EdTech 1 (lab_id = 4)
-(4, 2, '2026-11-18 09:00:00', '2026-11-18 12:00:00'),
-(4, 1, '2026-11-18 13:00:00', '2026-11-18 15:00:00'),
+-- EdTech 1
+(4, 2, 'HCI101', 'BSIT 1-14', 'Thursday', '09:00', '12:00', 1),
+(4, 1, 'CC103', 'BSIT 1-3', 'Thursday', '13:00', '15:00', 1),
 
--- EdTech 2 (lab_id = 5)
-(5, 3, '2026-11-18 08:00:00', '2026-11-18 10:30:00'),
-(5, 2, '2026-11-18 14:00:00', '2026-11-18 17:00:00');
-
+-- EdTech 2
+(5, 3, 'IM101', 'BSIT 2-12', 'Friday', '08:00', '10:30', 1),
+(5, 2, 'CC104', 'BSIT 2-2', 'Friday', '14:00', '17:00', 1);
