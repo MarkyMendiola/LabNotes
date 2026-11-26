@@ -38,12 +38,10 @@ namespace Labnote
 
             foreach (var item in Schedules.GetSchedulesForUser(Auth.CurrentUser.id))
             {
-                string day = item.start.ToString("ddd, MMM dd");
                 string time = item.start.ToString("h:mm tt") + " - " + item.end.ToString("h:mm tt");
 
-                // Column order: Day, Subjects & Section, Time, Computer Lab
-                // ("-" because the database does not store subjects or sections yet)
-                dataGridView1.Rows.Add(day, "-", time, item.labName);
+                // Column order: Day, Subjects, Section, Time, Computer Lab
+                dataGridView1.Rows.Add(item.dayOfWeek, item.subject, item.section, time, item.labName);
             }
         }
 

@@ -64,6 +64,7 @@
             Col2 = new DataGridViewTextBoxColumn();
             Col3 = new DataGridViewTextBoxColumn();
             Col4 = new DataGridViewTextBoxColumn();
+            Col5 = new DataGridViewTextBoxColumn();
             panel2.SuspendLayout();
             panel5.SuspendLayout();
             panel3.SuspendLayout();
@@ -376,7 +377,7 @@
             dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Col1, Col2, Col3, Col4 });
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Col1, Col2, Col3, Col4, Col5 });
             dataGridView1.GridColor = SystemColors.ControlDarkDark;
             dataGridView1.Location = new Point(293, 353);
             dataGridView1.Name = "dataGridView1";
@@ -393,21 +394,27 @@
             // 
             // Col2
             // 
-            Col2.HeaderText = "Subjects & Section";
+            Col2.HeaderText = "Subject";
             Col2.Name = "Col2";
             Col2.ReadOnly = true;
             // 
             // Col3
             // 
-            Col3.HeaderText = "Time";
+            Col3.HeaderText = "Section";
             Col3.Name = "Col3";
             Col3.ReadOnly = true;
             // 
             // Col4
             // 
-            Col4.HeaderText = "Computer Lab";
+            Col4.HeaderText = "Time";
             Col4.Name = "Col4";
             Col4.ReadOnly = true;
+            // 
+            // Col5
+            // 
+            Col5.HeaderText = "Computer Lab";
+            Col5.Name = "Col5";
+            Col5.ReadOnly = true;
             // 
             // Schedule
             // 
@@ -463,6 +470,7 @@
         private DataGridViewTextBoxColumn Col2;
         private DataGridViewTextBoxColumn Col3;
         private DataGridViewTextBoxColumn Col4;
+        private DataGridViewTextBoxColumn Col5;
         private Panel panel5;
         private Label label12;
         private Label label13;

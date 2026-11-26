@@ -98,8 +98,8 @@ namespace LabPCTracker.Backend
             using var conn = Db.Open();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = @"
-                SELECT s.lab_id, s.user_id, s.subject, s.section, 
-                s.day_of_week, s.start_time, s.end_time, s.is_recurring
+                SELECT s.schedule_id, l.lab_name, s.subject, s.section,
+                       s.day_of_week, s.start_time, s.end_time, s.is_recurring
                 FROM schedules s
                 JOIN labs l ON l.lab_id = s.lab_id
                 WHERE s.user_id = @userId
@@ -142,7 +142,7 @@ namespace LabPCTracker.Backend
         }
 
         // Books a lab for a teacher. Throws an error if the times are wrong or the lab is already taken.
-        public static void AddSchedule (DateTime start, DateTime end, int teacherId, int labId)
+        public static void AddSchedule (DateTime start, DateTime end, int teacherId, int labId, string subject, string section, string dayOfWeek)
         {
             if (end <= start)
             {
@@ -162,13 +162,16 @@ namespace LabPCTracker.Backend
             using var cmd = conn.CreateCommand();
 
             cmd.CommandText = @"
-                INSERT INTO schedules (start_time, end_time, user_id, lab_id)
-                VALUES (@start, @end, @teacherId, @labId);";
+                INSERT INTO schedules (start_time, end_time, user_id, lab_id, subject, section, day_of_week)
+                VALUES (@start, @end, @teacherId, @labId, @subject, @section, @dayOfWeek);";
 
             cmd.Parameters.AddWithValue("@start", start);
             cmd.Parameters.AddWithValue("@end", end);
             cmd.Parameters.AddWithValue("@teacherId", teacherId);
             cmd.Parameters.AddWithValue("@labId", labId);
+            cmd.Parameters.AddWithValue("@subject", subject);
+            cmd.Parameters.AddWithValue("@section", section);
+            cmd.Parameters.AddWithValue("@dayOfWeek", dayOfWeek);
             cmd.ExecuteNonQuery();
         }
     }

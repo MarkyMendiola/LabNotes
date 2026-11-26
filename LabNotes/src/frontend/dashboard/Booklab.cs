@@ -168,7 +168,7 @@ namespace Labnote
 
             try
             {
-                Schedules.AddSchedule(GetStart(), GetEnd(), Auth.CurrentUser.id, labs[selected].id);
+                Schedules.AddSchedule(GetStart(), GetEnd(), Auth.CurrentUser.id, labs[selected].id, "TBD", "TBD", GetStart().DayOfWeek.ToString());
                 MessageBox.Show(labs[selected].name + " is booked.", Constants.AppTitle);
                 ShowAvailability();
             }
