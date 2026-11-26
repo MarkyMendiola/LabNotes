@@ -614,6 +614,7 @@
             button17.TabIndex = 14;
             button17.Text = "PC 14";
             button17.UseVisualStyleBackColor = true;
+            button17.Click += PcButton_Click;
             // 
             // button37
             // 
@@ -652,6 +653,7 @@
             button9.TabIndex = 6;
             button9.Text = "PC 13";
             button9.UseVisualStyleBackColor = true;
+            button9.Click += PcButton_Click;
             // 
             // button22
             // 
