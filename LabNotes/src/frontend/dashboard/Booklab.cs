@@ -45,6 +45,13 @@ namespace Labnote
             FillTimes(comboBox2);
             FillTimes(comboBox3);
 
+            // Software dropdown: the first choice means "no software needed", then every software name from the database
+            comboSoftware.Items.Add("Any software");
+            foreach (string name in Computers.GetAllSoftware())
+            {
+                comboSoftware.Items.Add(name);
+            }
+
             // Show the lab names on the cards. Cards without a lab are hidden.
             labs = Computers.GetLabs();
             for (int i = 0; i < cards.Length; i++)
@@ -60,13 +67,15 @@ namespace Labnote
                 }
             }
 
-            // Default choice: today, 08:00 to 10:00 (set before the events are connected)
+            // Default choice: today, 08:00 to 10:00, any software (set before the events are connected)
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 2;
             comboBox3.SelectedIndex = 6;
+            comboSoftware.SelectedIndex = 0;
             comboBox1.SelectedIndexChanged += TimeChanged;
             comboBox2.SelectedIndexChanged += TimeChanged;
             comboBox3.SelectedIndexChanged += TimeChanged;
+            comboSoftware.SelectedIndexChanged += TimeChanged;   // choosing a software also refreshes the cards
 
             button1.Click += button1_Click;   // the "Schedule" button in the side menu
             button7.Click += button7_Click;   // "Add booking"
@@ -123,7 +132,37 @@ namespace Labnote
             ShowAvailability();
         }
 
-        // Marks each lab card "Available" (green) or "In Use" (red) for the chosen time
+        // The labs that have the software chosen in the dropdown.
+        // "Any software" (the first choice) means every lab counts.
+        private List<BackendLab> GetLabsWithSoftware()
+        {
+            if (comboSoftware.SelectedIndex <= 0)
+            {
+                return labs;
+            }
+            return Computers.GetLabsWithSoftware(comboSoftware.Text);
+        }
+
+        // True when the list has a lab with the same id
+        private bool ListHasLab(List<BackendLab> list, BackendLab lab)
+        {
+            foreach (var other in list)
+            {
+                if (other.id == lab.id)
+                    return true;
+            }
+            return false;
+        }
+        
+        // Sets the text of a card's status label, and colors both the label and the strip on top of the card
+        private void SetStatus(int i, string text, Color color)
+        {
+            statusLabels[i].Text = text;
+            statusLabels[i].BackColor = color;
+            chips[i].BackColor = color;
+        }
+
+        // Marks each lab card "Available" (green), "In Use" (red) or "No software" (gray) for the chosen time and software
         private void ShowAvailability()
         {
             DateTime start = GetStart();
@@ -133,8 +172,7 @@ namespace Labnote
             {
                 for (int i = 0; i < labs.Count; i++)
                 {
-                    statusLabels[i].Text = "Check time";
-                    chips[i].BackColor = Color.LightGray;
+                    SetStatus(i, "Check time", Color.LightGray);
                 }
                 return;
             }
@@ -143,17 +181,25 @@ namespace Labnote
             var booked = Schedules.GetBookedLabs(start, end);
             var free = Logic.Difference(labs, booked);
 
+            // Discrete math: bookable labs = free labs ∩ labs that have the software (set intersection)
+            var withSoftware = GetLabsWithSoftware();
+            var bookable = Logic.Intersection(free, withSoftware);
+
             for (int i = 0; i < labs.Count; i++)
             {
-                bool isFree = false;
-                foreach (var lab in free)
+                if (ListHasLab(bookable, labs[i]))
                 {
-                    if (lab.id == labs[i].id)
-                        isFree = true;
+                    SetStatus(i, "Available", Color.LightGreen);
                 }
-
-                statusLabels[i].Text = isFree ? "Available" : "In Use";
-                chips[i].BackColor = isFree ? Color.LightGreen : Color.Salmon;
+                else if (ListHasLab(free, labs[i]))
+                {
+                    // free at that time, but it does not have the software
+                    SetStatus(i, "No software", Color.LightGray);
+                }
+                else
+                {
+                    SetStatus(i, "In Use", Color.Salmon);
+                }
             }
         }
 
@@ -163,6 +209,12 @@ namespace Labnote
             if (selected < 0)
             {
                 MessageBox.Show("Click a lab first.", Constants.AppTitle);
+                return;
+            }
+
+            if (statusLabels[selected].Text == "No software")
+            {
+                MessageBox.Show(labs[selected].name + " does not have " + comboSoftware.Text + ".", Constants.AppTitle);
                 return;
             }
 

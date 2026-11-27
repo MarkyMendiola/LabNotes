@@ -43,6 +43,7 @@ namespace Labnote
                 // Column order: Day, Subjects, Section, Time, Computer Lab
                 dataGridView1.Rows.Add(item.dayOfWeek, item.subject, item.section, time, item.labName);
             }
+            FillRows();
         }
 
         private void label13_Click(object sender, EventArgs e)
@@ -81,6 +82,18 @@ namespace Labnote
             uc.Dock = DockStyle.Fill;
             this.Controls.Clear();
             this.Controls.Add(uc);
+        }
+
+        private void FillRows()
+        {
+            int count = dataGridView1.Rows.Count;
+            if (count == 0) return;
+
+            int available = dataGridView1.ClientSize.Height - dataGridView1.ColumnHeadersHeight;
+            int rowHeight = available / count;
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+                row.Height = rowHeight;
         }
     }
 }

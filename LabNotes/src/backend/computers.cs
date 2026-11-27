@@ -170,5 +170,26 @@ namespace LabPCTracker.Backend
 
             return labs;
         }
+        // Lists the name of every software that is installed on at least one PC
+        public static List<string> GetAllSoftware()
+        {
+            var software = new List<string>();
+
+            using var conn = Db.Open();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = @"
+                SELECT DISTINCT s.software_name
+                FROM software s
+                JOIN pc_software ps ON ps.software_id = s.software_id
+                ORDER BY s.software_name;";
+            using var reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                software.Add(reader.GetString(0));
+            }
+
+            return software;
+        }
     }
 }
