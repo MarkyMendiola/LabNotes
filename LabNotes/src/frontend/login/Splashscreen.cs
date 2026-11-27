@@ -31,7 +31,7 @@ namespace Labnote
                 timer1.Stop();
 
                 // Open LoginWindow (or MainWindow) after loading finishes
-                Form2 main = new Form2();
+                LogIn main = new LogIn();
                 main.Show();
                 this.Hide();
             }
