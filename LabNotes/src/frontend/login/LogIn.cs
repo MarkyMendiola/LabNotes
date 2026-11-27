@@ -74,6 +74,8 @@ namespace Labnote
                 }
                 else
                 {
+                    button1.BackColor = Color.FromArgb(255, 99, 71);
+                    button1.ForeColor = Color.White;
                     MessageBox.Show(
                         "Wrong full name or password.",
                         Constants.AppTitle
