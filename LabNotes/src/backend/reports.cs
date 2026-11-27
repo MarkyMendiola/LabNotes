@@ -40,9 +40,14 @@ namespace LabPCTracker.Backend
         }
 
         // Reports a problem on a computer.
-        // Adds the log AND sets the computer's status to "Broken". Returns the new log_id.
-        public static int ReportIssue(int computerId, int reportedBy, string description)
+        // Adds the log AND sets the computer's status to the chosen one ("Faulty" or "Broken"). Returns the new log_id.
+        public static int ReportIssue(int computerId, int reportedBy, string description, string status)
         {
+            if (status != Constants.StatusFaulty && status != Constants.StatusBroken)
+            {
+                throw new InvalidOperationException("The status must be Faulty or Broken.");
+            }
+
             using var conn = Db.Open();
             using var tx = conn.BeginTransaction();
 
@@ -67,12 +72,32 @@ namespace LabPCTracker.Backend
 
             using var update = conn.CreateCommand();
             update.Transaction = tx;
-            update.CommandText = "UPDATE computers SET status = 'Broken' WHERE computer_id = @computerId;";
+            update.CommandText = "UPDATE computers SET status = @status WHERE computer_id = @computerId;";
+            update.Parameters.AddWithValue("@status", status);
             update.Parameters.AddWithValue("@computerId", computerId);
             update.ExecuteNonQuery();
 
             tx.Commit();
             return (int)result;
+        }
+
+        // Gives a log to every computer that is Faulty or Broken but has no open log yet,
+        // for example a computer that was already marked Faulty when the app first started.
+        // Safe to call many times: computers that already have an open log are skipped.
+        public static void AddMissingLogs(int reportedBy)
+        {
+            using var conn = Db.Open();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = @"
+                INSERT INTO issue_logs (computer_id, lab_id, reported_by, description)
+                SELECT c.computer_id, c.lab_id, @reportedBy, 'Already ' + c.status + ' at start-up'
+                FROM computers c
+                WHERE c.status IN ('Faulty', 'Broken')
+                  AND c.lab_id IS NOT NULL
+                  AND NOT EXISTS (SELECT 1 FROM issue_logs il
+                                  WHERE il.computer_id = c.computer_id AND il.resolved_at IS NULL);";
+            cmd.Parameters.AddWithValue("@reportedBy", reportedBy);
+            cmd.ExecuteNonQuery();
         }
 
         // Marks an issue as fixed (sets resolved_at to now).

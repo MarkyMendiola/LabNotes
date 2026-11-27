@@ -89,6 +89,7 @@ namespace Labnote
                     else if (pc.status == Constants.StatusFaulty)
                     {
                         b.BackColor = Color.DarkOrange;
+                        broken++;   // a faulty PC can't be used either, so it is counted here too
                     }
                     else
                     {
@@ -100,7 +101,7 @@ namespace Labnote
 
             label5.Text = pcs.Count.ToString();   // Total PCs
             label6.Text = available.ToString();   // Available
-            label7.Text = broken.ToString();      // Broken
+            label7.Text = broken.ToString();      // Broken (faulty PCs are counted here too)
         }
 
         private void main_Click(object sender, EventArgs e)

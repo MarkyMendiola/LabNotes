@@ -31,10 +31,6 @@
             PCtitle = new Label();
             button1 = new Button();
             panel1 = new Panel();
-            label5 = new Label();
-            label4 = new Label();
-            label3 = new Label();
-            label2 = new Label();
             label1 = new Label();
             linkLabel1 = new LinkLabel();
             flowLayoutPanel1 = new FlowLayoutPanel();
@@ -65,62 +61,12 @@
             // 
             // panel1
             // 
+            panel1.AutoScroll = true;
             panel1.BackColor = SystemColors.MenuHighlight;
-            panel1.Controls.Add(label5);
-            panel1.Controls.Add(label4);
-            panel1.Controls.Add(label3);
-            panel1.Controls.Add(label2);
             panel1.Location = new Point(418, 206);
             panel1.Name = "panel1";
             panel1.Size = new Size(370, 232);
             panel1.TabIndex = 2;
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.BackColor = Color.Salmon;
-            label5.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label5.Location = new Point(120, 16);
-            label5.Name = "label5";
-            label5.Size = new Size(107, 32);
-            label5.TabIndex = 3;
-            label5.Text = "PC Dead";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.BackColor = Color.PaleGreen;
-            label4.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label4.Location = new Point(120, 60);
-            label4.Name = "label4";
-            label4.Size = new Size(103, 32);
-            label4.TabIndex = 2;
-            label4.Text = "PC Alive";
-            label4.Click += label4_Click;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.BackColor = SystemColors.ControlLightLight;
-            label3.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label3.ForeColor = SystemColors.MenuHighlight;
-            label3.Location = new Point(13, 60);
-            label3.Name = "label3";
-            label3.Size = new Size(101, 32);
-            label3.TabIndex = 1;
-            label3.Text = "11/11/11 ";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.BackColor = SystemColors.ControlLightLight;
-            label2.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.ForeColor = SystemColors.MenuHighlight;
-            label2.Location = new Point(13, 16);
-            label2.Name = "label2";
-            label2.Size = new Size(101, 32);
-            label2.TabIndex = 0;
-            label2.Text = "11/11/11 ";
             // 
             // label1
             // 
@@ -194,12 +140,8 @@
         private Label PCtitle;
         private Button button1;
         private Panel panel1;
-        private Label label2;
         private Label label1;
         private LinkLabel linkLabel1;
-        private Label label5;
-        private Label label4;
-        private Label label3;
         private FlowLayoutPanel flowLayoutPanel1;
         private Label label6;
     }

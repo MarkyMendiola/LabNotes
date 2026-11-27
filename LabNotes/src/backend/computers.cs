@@ -115,8 +115,8 @@ namespace LabPCTracker.Backend
             return software;
         }
 
-        // Returns the name of the lab with the most broken PCs and sets brokenCount to that number.
-        // Returns "" (and 0) when no PC is broken.
+        // Returns the name of the lab with the most Faulty or Broken PCs and sets brokenCount to that number.
+        // Returns "" (and 0) when no PC is faulty or broken.
         public static string GetMostBrokenLab(out int brokenCount)
         {
             using var conn = Db.Open();
@@ -125,7 +125,7 @@ namespace LabPCTracker.Backend
                 SELECT TOP 1 l.lab_name, COUNT(*) AS total
                 FROM computers c
                 JOIN labs l ON l.lab_id = c.lab_id
-                WHERE c.status = 'Broken'
+                WHERE c.status IN ('Faulty', 'Broken')
                 GROUP BY l.lab_name
                 ORDER BY COUNT(*) DESC, l.lab_name;";
             using var reader = cmd.ExecuteReader();
@@ -138,6 +138,37 @@ namespace LabPCTracker.Backend
 
             brokenCount = reader.GetInt32(1);
             return reader.GetString(0);
+        }
+
+        // Lists the labs that have the software installed (on at least one PC)
+        public static List<Lab> GetLabsWithSoftware(string softwareName)
+        {
+            var labs = new List<Lab>();
+
+            using var conn = Db.Open();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = @"
+                SELECT DISTINCT l.lab_id, l.lab_name
+                FROM labs l
+                JOIN computers c ON c.lab_id = l.lab_id
+                JOIN pc_software ps ON ps.computer_id = c.computer_id
+                JOIN software s ON s.software_id = ps.software_id
+                WHERE s.software_name LIKE @name
+                ORDER BY l.lab_name;";
+            cmd.Parameters.AddWithValue("@name", "%" + softwareName + "%");
+            using var reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var lab = new Lab
+                {
+                    id = reader.GetInt32(0),
+                    name = reader.GetString(1)
+                };
+                labs.Add(lab);
+            }
+
+            return labs;
         }
     }
 }

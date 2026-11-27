@@ -30,7 +30,7 @@ namespace Labnote
                 return;
             }
 
-            Application.Run(new Form2());   // Form2 is the login screen
+            Application.Run(new Splashscreen());   // Splashscreen is the login screen
         }
 
         // Forgets the logged-in user, then restarts the app so the login screen shows again

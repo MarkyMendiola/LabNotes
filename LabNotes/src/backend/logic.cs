@@ -26,5 +26,23 @@ namespace LabPCTracker.Backend
 
             return result;
         }
+
+        // Set intersection, A ∩ B: every lab that is in A AND also in B.
+        // Bookable labs = free labs ∩ labs that have the software.
+        public static List<Lab> Intersection(List<Lab> setA, List<Lab> setB)
+        {
+            var result = new List<Lab>();
+
+            foreach (var lab in setA)
+            {
+                foreach (var other in setB)
+                {
+                    if (other.id == lab.id)
+                        result.Add(lab);
+                }
+            }
+
+            return result;
+        }
     }
 }

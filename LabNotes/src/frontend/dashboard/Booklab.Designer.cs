@@ -71,6 +71,10 @@
             panel12 = new Panel();
             panel13 = new Panel();
             button7 = new Button();
+            lblSubject = new Label();
+            txtSubject = new TextBox();
+            lblSection = new Label();
+            txtSection = new TextBox();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tableLayoutPanel1.SuspendLayout();
@@ -565,11 +569,55 @@
             button7.Text = "Add booking";
             button7.UseVisualStyleBackColor = false;
             // 
+            // lblSubject
+            // 
+            lblSubject.AutoSize = true;
+            lblSubject.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblSubject.Location = new Point(590, 534);
+            lblSubject.Name = "lblSubject";
+            lblSubject.Size = new Size(110, 25);
+            lblSubject.TabIndex = 18;
+            lblSubject.Text = "Class name";
+            // 
+            // txtSubject
+            // 
+            txtSubject.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtSubject.Location = new Point(590, 565);
+            txtSubject.MaxLength = 50;
+            txtSubject.Name = "txtSubject";
+            txtSubject.PlaceholderText = "e.g. CC102";
+            txtSubject.Size = new Size(390, 29);
+            txtSubject.TabIndex = 19;
+            // 
+            // lblSection
+            // 
+            lblSection.AutoSize = true;
+            lblSection.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblSection.Location = new Point(590, 612);
+            lblSection.Name = "lblSection";
+            lblSection.Size = new Size(76, 25);
+            lblSection.TabIndex = 20;
+            lblSection.Text = "Section";
+            // 
+            // txtSection
+            // 
+            txtSection.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtSection.Location = new Point(590, 643);
+            txtSection.MaxLength = 10;
+            txtSection.Name = "txtSection";
+            txtSection.PlaceholderText = "e.g. BSIT 1-1";
+            txtSection.Size = new Size(200, 29);
+            txtSection.TabIndex = 21;
+            // 
             // Booklab
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
+            Controls.Add(txtSection);
+            Controls.Add(lblSection);
+            Controls.Add(txtSubject);
+            Controls.Add(lblSubject);
             Controls.Add(button7);
             Controls.Add(panel13);
             Controls.Add(flowLayoutPanel1);
@@ -638,5 +686,9 @@
         private Panel panel12;
         private Panel panel13;
         private Button button7;
+        private Label lblSubject;
+        private TextBox txtSubject;
+        private Label lblSection;
+        private TextBox txtSection;
     }
 }

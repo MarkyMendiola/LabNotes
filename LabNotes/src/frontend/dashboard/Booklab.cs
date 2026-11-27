@@ -168,13 +168,16 @@ namespace Labnote
 
             try
             {
-                Schedules.AddSchedule(GetStart(), GetEnd(), Auth.CurrentUser.id, labs[selected].id, "TBD", "TBD", GetStart().DayOfWeek.ToString());
+                // The class name and the section typed in the two boxes are saved with the booking
+                Schedules.AddSchedule(GetStart(), GetEnd(), Auth.CurrentUser.id, labs[selected].id, txtSubject.Text.Trim(), txtSection.Text.Trim(), GetStart().DayOfWeek.ToString());
                 MessageBox.Show(labs[selected].name + " is booked.", Constants.AppTitle);
+                txtSubject.Clear();
+                txtSection.Clear();
                 ShowAvailability();
             }
             catch (InvalidOperationException ex)
             {
-                MessageBox.Show(ex.Message, Constants.AppTitle);   // wrong time or lab already taken
+                MessageBox.Show(ex.Message, Constants.AppTitle);   // wrong time, empty class name or section, or lab already taken
             }
         }
 

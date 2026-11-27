@@ -59,7 +59,9 @@ namespace LabPCTracker.Backend
             return teachers;
         }
     
-        // Creates a list of the labs that are booked at any moment between start and end
+        // Creates a list of the labs that are booked at any moment between start and end.
+        // A one-time booking is in the way only on the same date.
+        // A weekly (recurring) booking is in the way on the same weekday, whatever the date is.
         // P.S class Lab is defined in computers.cs, but it shares namespace so it can be used here as well
         public static List<Lab> GetBookedLabs(DateTime start, DateTime end)
         {
@@ -71,10 +73,18 @@ namespace LabPCTracker.Backend
                 SELECT l.lab_id, l.lab_name
                 FROM labs l
                 JOIN schedules s ON s.lab_id = l.lab_id
-                WHERE s.start_time < @end AND s.end_time > @start
+                WHERE
+                    -- one-time booking: same date and the times overlap
+                    (s.is_recurring = 0 AND s.start_time < @end AND s.end_time > @start)
+                    OR
+                    -- weekly booking: same weekday and the times of day overlap
+                    (s.is_recurring = 1 AND s.day_of_week = @dayOfWeek
+                     AND CAST(s.start_time AS TIME) < CAST(@end AS TIME)
+                     AND CAST(s.end_time AS TIME) > CAST(@start AS TIME))
                 ORDER BY l.lab_name;";
-            cmd.Parameters.AddWithValue("@start", start);  
-            cmd.Parameters.AddWithValue("@end", end);    
+            cmd.Parameters.AddWithValue("@start", start);
+            cmd.Parameters.AddWithValue("@end", end);
+            cmd.Parameters.AddWithValue("@dayOfWeek", start.DayOfWeek.ToString());
             using var reader = cmd.ExecuteReader();
 
             while(reader.Read())
@@ -141,12 +151,18 @@ namespace LabPCTracker.Backend
             return null;
         }
 
-        // Books a lab for a teacher. Throws an error if the times are wrong or the lab is already taken.
+        // Books a lab for a teacher on one date. Throws an error if the times are wrong,
+        // the class name or section is empty, or the lab is already taken.
         public static void AddSchedule (DateTime start, DateTime end, int teacherId, int labId, string subject, string section, string dayOfWeek)
         {
             if (end <= start)
             {
                 throw new InvalidOperationException("The end time must be after the start time.");
+            }
+
+            if (string.IsNullOrWhiteSpace(subject) || string.IsNullOrWhiteSpace(section))
+            {
+                throw new InvalidOperationException("Please type the class name and the section.");
             }
 
             // Conflict check: is this lab already booked at some point between start and end?
@@ -162,8 +178,8 @@ namespace LabPCTracker.Backend
             using var cmd = conn.CreateCommand();
 
             cmd.CommandText = @"
-                INSERT INTO schedules (start_time, end_time, user_id, lab_id, subject, section, day_of_week)
-                VALUES (@start, @end, @teacherId, @labId, @subject, @section, @dayOfWeek);";
+                INSERT INTO schedules (start_time, end_time, user_id, lab_id, subject, section, day_of_week, is_recurring)
+                VALUES (@start, @end, @teacherId, @labId, @subject, @section, @dayOfWeek, 0);";   // 0 = one-time booking
 
             cmd.Parameters.AddWithValue("@start", start);
             cmd.Parameters.AddWithValue("@end", end);
