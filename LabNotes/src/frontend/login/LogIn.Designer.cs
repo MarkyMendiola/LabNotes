@@ -89,30 +89,29 @@
             // 
             // textBox1
             // 
-            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox1.BackColor = SystemColors.Window;
             textBox1.Cursor = Cursors.IBeam;
             textBox1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             textBox1.ForeColor = SystemColors.WindowText;
-            textBox1.Location = new Point(601, 425);
-            textBox1.Multiline = true;
+            textBox1.Location = new Point(601, 431);
             textBox1.Name = "textBox1";
             textBox1.PlaceholderText = "Enter Fullname";
-            textBox1.Size = new Size(540, 44);
+            textBox1.Size = new Size(540, 31);
             textBox1.TabIndex = 10;
             textBox1.TextChanged += textBox_TextChanged;
             // 
             // textBox2
             // 
-            textBox2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            textBox2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox2.Cursor = Cursors.IBeam;
             textBox2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             textBox2.Location = new Point(601, 510);
-            textBox2.Multiline = true;
             textBox2.Name = "textBox2";
             textBox2.PlaceholderText = "Enter Password";
             textBox2.Size = new Size(540, 44);
             textBox2.TabIndex = 11;
+            textBox2.PasswordChar = '*';
             textBox2.TextChanged += textBox_TextChanged;
             // 
             // label2

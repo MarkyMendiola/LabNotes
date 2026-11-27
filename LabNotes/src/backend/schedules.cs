@@ -136,19 +136,54 @@ namespace LabPCTracker.Backend
             return items;
         }
 
-        // Returns the first booking that has not started yet, or null if there is none
+        // Returns the booking that starts soonest from now, or null if there is none
         public static ScheduleItem GetNextSchedule(int userId)
         {
-            // The list is already sorted by start time, so the first future one is the next one
+            ScheduleItem next = null;
+
             foreach (var item in GetSchedulesForUser(userId))
             {
-                if (item.start >= DateTime.Now)
+                // A weekly booking is saved with only a weekday and a time of day (its date is 1900),
+                // so first work out the next real date it happens on
+                if (item.isRecurring)
                 {
-                    return item;
+                    MoveToNextWeekday(item);
+                }
+
+                // A one-time booking that already started is skipped
+                if (item.start < DateTime.Now)
+                {
+                    continue;
+                }
+
+                // Keep the one that starts the earliest
+                if (next == null || item.start < next.start)
+                {
+                    next = item;
                 }
             }
 
-            return null;
+            return next;
+        }
+
+        // Changes a weekly booking's start and end to its next real date (today counts if it has not started yet)
+        private static void MoveToNextWeekday(ScheduleItem item)
+        {
+            TimeSpan length = item.end - item.start;
+            DateTime date = DateTime.Today + item.start.TimeOfDay;
+
+            // Go forward one day at a time until it is the right weekday and still in the future (at most 8 days)
+            for (int i = 0; i < 8; i++)
+            {
+                if (date.DayOfWeek.ToString() == item.dayOfWeek && date >= DateTime.Now)
+                {
+                    break;
+                }
+                date = date.AddDays(1);
+            }
+
+            item.start = date;
+            item.end = date + length;
         }
 
         // Books a lab for a teacher on one date. Throws an error if the times are wrong,
